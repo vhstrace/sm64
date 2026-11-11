@@ -472,3 +472,61 @@ passes against `master`.
   builds the patch.
 - The box still spins open and closed at the normal speed.
 - You still press A or B for each page.
+
+## Time moves only while a button is held or the stick is pushed
+
+**Source diff:** `cheats/patches/time-moves-only-while-input-is-held.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:43:53
+
+**Mechanism:** `play_mode_normal()` in `src/game/level_update.c` runs once
+per frame during play. It counts up the course timer and then updates
+every object:
+
+```c
+if (sTimerRunning && gHudDisplay.timer < 17999) {
+    gHudDisplay.timer++;
+}
+
+area_update_objects();
+```
+
+The patch wraps both in a test of controller 1:
+
+```c
+if (gPlayer1Controller->buttonDown != 0 || gPlayer1Controller->stickMag > 0.0f) {
+```
+
+So the world moves only on frames when any button is held (A, B, Z,
+Start, L, R, C buttons or the D-pad) or the analog stick is pushed. With
+no input, everything stands still. Ported from the Zelda cheat "Time
+moves only while a button is held", with the analog stick added.
+
+**Evidence:** Mario is an object too: `bhvMario` (`data/behavior_data.c`)
+calls `bhv_mario_update()` (`object_list_processor.c`), which runs
+`execute_mario_action()`. So `area_update_objects()` moves Mario and
+every other object. `adjust_analog_stick()` (`src/game/game_init.c`) sets
+`stickX` and `stickY` to 0 when the raw stick is within 7 of center, so
+`stickMag` is 0 inside the dead zone and above 0 outside it. The stick
+counts as soon as it leaves the dead zone. `buttonDown` is the
+held-buttons mask in `struct Controller` (`include/types.h`).
+`git apply --check cheats/patches/time-moves-only-while-input-is-held.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- This patch adds code, so every function after `play_mode_normal()` in
+  `level_update.c` moves. That is fine for a BPS, but it may not combine
+  cleanly with other patches made as ROM bytes.
+- Still running with no input: the camera (`update_camera()`), the HUD,
+  warps and fades already started, the pause check, music and sound, and
+  anything driven by `gGlobalTimer` (some animated textures and effects).
+- Only controller 1 counts.
+- A stick that drifts past the dead zone keeps time running.
+- Demos on the title screen feed their own input to controller 1, so
+  they run as usual.

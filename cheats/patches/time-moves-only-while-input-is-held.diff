@@ -1,0 +1,23 @@
+diff --git a/src/game/level_update.c b/src/game/level_update.c
+index a6186c3..712e0f3 100644
+--- a/src/game/level_update.c
++++ b/src/game/level_update.c
+@@ -974,11 +974,14 @@ s32 play_mode_normal(void) {
+     warp_area();
+     check_instant_warp();
+ 
+-    if (sTimerRunning && gHudDisplay.timer < 17999) {
+-        gHudDisplay.timer++;
+-    }
++    // Time moves only while a button is held or the stick is pushed.
++    if (gPlayer1Controller->buttonDown != 0 || gPlayer1Controller->stickMag > 0.0f) {
++        if (sTimerRunning && gHudDisplay.timer < 17999) {
++            gHudDisplay.timer++;
++        }
+ 
+-    area_update_objects();
++        area_update_objects();
++    }
+     update_hud_values();
+ 
+     if (gCurrentArea != NULL) {
