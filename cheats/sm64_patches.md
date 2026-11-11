@@ -431,3 +431,39 @@ passes against `master`.
   builds the patch.
 - MIPS is in the castle basement, so you still need the first Bowser
   key (or the basement door unlocked) to reach him.
+
+## Dialog pages turn instantly
+
+**Source diff:** `cheats/patches/dialog-pages-turn-instantly.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:28:12
+
+**Mechanism:** SM64 prints a whole page of text at once, so the slow part is the page
+scroll. `render_dialog_entries()` in `src/game/ingame_menu.c` scrolls the
+text up by `linesPerBox * 2` each frame until it reaches
+`linesPerBox * DIAG_VAL1`:
+
+```c
+case MENU_STATE_DIALOG_SCROLLING:
+    gDialogScrollOffsetY += dialog->linesPerBox * 2;
+```
+
+`DIAG_VAL1` is 16 on US, so a page takes 8 frames. The patch adds
+`dialog->linesPerBox * DIAG_VAL1` instead, so the next page shows on the
+next frame. Ported from the Zelda cheat "Fastest possible NPC text".
+
+**Evidence:** `DIAG_VAL1` is defined just above the function (16 for US and EU, 20
+for JP and SH). The test that ends the scroll is
+`gDialogScrollOffsetY >= dialog->linesPerBox * DIAG_VAL1`, so it is met
+after one frame on every version. `git apply --check cheats/patches/dialog-pages-turn-instantly.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- The box still spins open and closed at the normal speed.
+- You still press A or B for each page.

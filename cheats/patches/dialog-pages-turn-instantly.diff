@@ -1,0 +1,13 @@
+diff --git a/src/game/ingame_menu.c b/src/game/ingame_menu.c
+index 0ac715b..7b674f1 100644
+--- a/src/game/ingame_menu.c
++++ b/src/game/ingame_menu.c
+@@ -2043,7 +2043,7 @@ void render_dialog_entries(void) {
+             break;
+ 
+         case MENU_STATE_DIALOG_SCROLLING:
+-            gDialogScrollOffsetY += dialog->linesPerBox * 2;
++            gDialogScrollOffsetY += dialog->linesPerBox * DIAG_VAL1;
+ 
+             if (gDialogScrollOffsetY >= dialog->linesPerBox * DIAG_VAL1) {
+                 gDialogPageStartStrIndex = gNextDialogPageStartStrIndex;
