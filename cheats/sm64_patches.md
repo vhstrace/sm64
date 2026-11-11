@@ -473,9 +473,9 @@ passes against `master`.
 - The box still spins open and closed at the normal speed.
 - You still press A or B for each page.
 
-## Time moves only while a button is held or the stick is pushed
+## Superhot mode: time moves only while the controller is active
 
-**Source diff:** `cheats/patches/time-moves-only-while-input-is-held.diff`
+**Source diff:** `cheats/patches/superhot-mode.diff`
 **Changes:** not built yet
 **Recorded:** 2026-11-11 02:43:53
 
@@ -510,7 +510,7 @@ every other object. `adjust_analog_stick()` (`src/game/game_init.c`) sets
 `stickMag` is 0 inside the dead zone and above 0 outside it. The stick
 counts as soon as it leaves the dead zone. `buttonDown` is the
 held-buttons mask in `struct Controller` (`include/types.h`).
-`git apply --check cheats/patches/time-moves-only-while-input-is-held.diff`
+`git apply --check cheats/patches/superhot-mode.diff`
 passes against `master`.
 
 **Revisions:** US (rev 0) only. Others not checked.
