@@ -1,0 +1,36 @@
+diff --git a/src/game/mario_actions_cutscene.c b/src/game/mario_actions_cutscene.c
+index fcee2c2..ec70aee 100644
+--- a/src/game/mario_actions_cutscene.c
++++ b/src/game/mario_actions_cutscene.c
+@@ -1164,7 +1164,6 @@ s32 act_death_exit(struct MarioState *m) {
+ #if ENABLE_RUMBLE
+         queue_rumble_data(5, 80);
+ #endif
+-        m->numLives--;
+         // restore 7.75 units of health
+         m->healCounter = 31;
+     }
+@@ -1180,7 +1179,6 @@ s32 act_unused_death_exit(struct MarioState *m) {
+ #else
+         play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
+ #endif
+-        m->numLives--;
+         // restore 7.75 units of health
+         m->healCounter = 31;
+     }
+@@ -1199,7 +1197,6 @@ s32 act_falling_death_exit(struct MarioState *m) {
+ #if ENABLE_RUMBLE
+         queue_rumble_data(5, 80);
+ #endif
+-        m->numLives--;
+         // restore 7.75 units of health
+         m->healCounter = 31;
+     }
+@@ -1246,7 +1243,6 @@ s32 act_special_death_exit(struct MarioState *m) {
+ #if ENABLE_RUMBLE
+         queue_rumble_data(5, 80);
+ #endif
+-        m->numLives--;
+         m->healCounter = 31;
+     }
+     // show Mario
