@@ -72,3 +72,39 @@ passes against `master`.
 - Mario still dies and loses his place in the course. Only the life
   count is kept.
 - Game over can no longer happen.
+
+## Enemies do no damage
+
+**Source diff:** `cheats/patches/enemies-do-no-damage.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:23:12
+
+**Mechanism:** `take_damage_from_interact_object()` in `src/game/interaction.c` adds
+the touching object's damage to the hurt counter:
+
+```c
+m->hurtCounter += 4 * damage;
+```
+
+The patch makes it `0 * damage`, so nothing is added. Every object
+interaction that hurts Mario (`interact_damage`, `interact_flame`,
+`interact_shock`, `interact_bully`, `interact_mr_blizzard` and the other
+`take_damage_and_knock_back` callers) goes through this function. Ported
+from the Zelda cheat "Blue Lynels barely hurt you".
+
+**Evidence:** Other `hurtCounter +=` lines found with grep: lava
+(`check_lava_boost`, `interaction.c`), fall damage
+(`mario_actions_airborne.c`), burning (`mario_actions_automatic.c`,
+`mario_actions_cutscene.c`). The patch does not touch these. `git apply --check cheats/patches/enemies-do-no-damage.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- Fall damage, lava, burning, drowning and falling out of the level
+  still hurt or kill Mario.
+- Mario is still knocked back and still flashes after a hit.

@@ -1,0 +1,13 @@
+diff --git a/src/game/interaction.c b/src/game/interaction.c
+index ea6e455..2b9268b 100644
+--- a/src/game/interaction.c
++++ b/src/game/interaction.c
+@@ -697,7 +697,7 @@ u32 take_damage_from_interact_object(struct MarioState *m) {
+         damage = 0;
+     }
+ 
+-    m->hurtCounter += 4 * damage;
++    m->hurtCounter += 0 * damage;
+ 
+ #if ENABLE_RUMBLE
+     queue_rumble_data(5, 80);
