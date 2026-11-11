@@ -1,0 +1,13 @@
+diff --git a/src/game/mario.c b/src/game/mario.c
+index 32c63c9..fd8bfe7 100644
+--- a/src/game/mario.c
++++ b/src/game/mario.c
+@@ -1883,7 +1883,7 @@ void init_mario_from_save_file(void) {
+         save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
+     gMarioState->numKeys = 0;
+ 
+-    gMarioState->numLives = 4;
++    gMarioState->numLives = 99;
+     gMarioState->health = 0x880;
+ 
+     gMarioState->prevNumStarsForDialog = gMarioState->numStars;
