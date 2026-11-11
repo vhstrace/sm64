@@ -19,8 +19,10 @@ that is possible here, so don't try it, and don't write to `~/Downloads`.
   Never commit a ROM, any file made from one (extracted textures, sound,
   `build/`), or bytes copied out of one.
 - Don't build. The build takes its assets out of the ROM.
-- Until `cheats/sm64.us.map` exists, you have no RAM or ROM addresses.
-  Don't make up addresses or copy them from the web.
+- RAM addresses come only from `cheats/sm64.us.map` (from a build that
+  matches the ROM). Don't make up addresses or copy them from the web.
+  `main` code is at ROM = RAM - `0x80245000`; `engine` code is at
+  ROM = RAM - `0x80283280`.
 
 ## Making a patch
 
@@ -49,8 +51,7 @@ fine for a BPS but makes the patch hard to combine with others.
 
 ## GameShark codes
 
-Only once `cheats/sm64.us.map` exists. Get variable addresses from that
-map and struct offsets from the C headers (for example, `struct
+Get variable addresses from `cheats/sm64.us.map` and struct offsets from the C headers (for example, `struct
 MarioState` in `include/types.h`). Format: `8XXXXXXX 00YY` writes one
 byte, `81XXXXXX YYYY` writes two bytes (even address). `D0XXXXXX 00YY` /
 `D1XXXXXX YYYY` run the next line only if the value there matches.
