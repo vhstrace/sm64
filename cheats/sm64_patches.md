@@ -58,8 +58,8 @@ is thrown out of the course, but the life count never goes down. Ported
 from the Zelda cheat "Link cannot die".
 
 **Evidence:** `grep -rn "numLives--" src/` finds only these four lines. The game-over
-checks in `level_update_warp_out()`-area code (`src/game/level_update.c`,
-`if (m->numLives == 0)`) can then never be true unless you start at 0. `git apply --check cheats/patches/never-lose-a-life.diff`
+checks in `level_trigger_warp()` (`src/game/level_update.c`,
+`if (m->numLives == 0)`) can then never be true. `git apply --check cheats/patches/never-lose-a-life.diff`
 passes against `master`.
 
 **Revisions:** US (rev 0) only. Others not checked.
@@ -86,10 +86,11 @@ the touching object's damage to the hurt counter:
 m->hurtCounter += 4 * damage;
 ```
 
-The patch makes it `0 * damage`, so nothing is added. Every object
-interaction that hurts Mario (`interact_damage`, `interact_flame`,
-`interact_shock`, `interact_bully`, `interact_mr_blizzard` and the other
-`take_damage_and_knock_back` callers) goes through this function. Ported
+The patch makes it `0 * damage`, so nothing is added. Enemy hits go
+through this function: `interact_shock` and `interact_snufit_bullet`
+call it directly, and `take_damage_and_knock_back()` (used by
+`interact_damage`, `interact_mr_blizzard`, `interact_hit_from_below`,
+`interact_bounce_top` and `interact_clam_or_bubba`) calls it too. Ported
 from the Zelda cheat "Blue Lynels barely hurt you".
 
 **Evidence:** Other `hurtCounter +=` lines found with grep: lava
@@ -105,8 +106,10 @@ passes against `master`.
 - Not tested.
 - Not built. The Mac fills in **Changes:** (the ROM bytes) after it
   builds the patch.
-- Fall damage, lava, burning, drowning and falling out of the level
-  still hurt or kill Mario.
+- Fall damage, lava, drowning and falling out of the level still hurt
+  or kill Mario.
+- Flames still hurt: `interact_flame()` sets Mario on fire, and the
+  burning actions do the damage.
 - Mario is still knocked back and still flashes after a hit.
 
 ## The Wing Cap lasts four times as long
@@ -353,8 +356,10 @@ if (save_file_get_total_star_count(...) < 120
 
 The patch changes `< 120` to `< 0`, which is never true.
 
-**Evidence:** `sYoshiDead` still removes him after you have talked to him once in a
-session. `git apply --check cheats/patches/yoshi-on-the-roof-without-120-stars.diff`
+**Evidence:** `sYoshiDead` is set when Yoshi jumps off the roof after you talk to
+him, and cleared by `set_yoshi_as_not_dead()` (`src/game/obj_behaviors.c`)
+on file select. So he still leaves after one talk, until you pick a file
+again. `git apply --check cheats/patches/yoshi-on-the-roof-without-120-stars.diff`
 passes against `master`.
 
 **Revisions:** US (rev 0) only. Others not checked.
