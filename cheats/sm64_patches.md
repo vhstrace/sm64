@@ -247,3 +247,45 @@ passes against `master`.
 - Reaching 100 coins no longer spawns a second star.
 - The coin score saved with the star is whatever you have when you
   touch it.
+
+## Mario runs twice as fast
+
+**Source diff:** `cheats/patches/mario-runs-twice-as-fast.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:25:42
+
+**Mechanism:** `update_walking_speed()` in `src/game/mario_actions_moving.c` sets a
+target speed from the stick (at most 32), accelerates toward it with
+`1.1f - forwardVel / 43.0f` (which stops near 43), and caps the speed at
+48:
+
+```c
+targetSpeed = m->intendedMag < maxTargetSpeed ? m->intendedMag : maxTargetSpeed;
+...
+m->forwardVel += 1.1f - m->forwardVel / 43.0f;
+...
+if (m->forwardVel > 48.0f) {
+    m->forwardVel = 48.0f;
+```
+
+The patch doubles the target speed (up to 64), changes `43.0f` to
+`86.0f` so acceleration does not stop early, and raises the cap from 48
+to 64. Ported from the Zelda cheat "Link walks much faster".
+
+**Evidence:** Only walking and running use `update_walking_speed()` (called from
+`act_walking()`). `perform_ground_step()` (`mario_step.c`) moves in four
+quarter-steps, so 64 is 16 units per step. `git apply --check cheats/patches/mario-runs-twice-as-fast.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- Long jumps still cap at 48 (`set_mario_action_airborne()`,
+  `mario.c`), so a long jump from a full run is slower than the run.
+- Slow (`SURFACE_SLOW`) floors still have a lower target, now 48.
+- At this speed Mario may run off ledges and into walls more easily.
+  Wall collisions at speed 64 are not checked.

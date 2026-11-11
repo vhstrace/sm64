@@ -1,0 +1,30 @@
+diff --git a/src/game/mario_actions_moving.c b/src/game/mario_actions_moving.c
+index 9da6abb..a3f396b 100644
+--- a/src/game/mario_actions_moving.c
++++ b/src/game/mario_actions_moving.c
+@@ -441,7 +441,7 @@ void update_walking_speed(struct MarioState *m) {
+         maxTargetSpeed = 32.0f;
+     }
+ 
+-    targetSpeed = m->intendedMag < maxTargetSpeed ? m->intendedMag : maxTargetSpeed;
++    targetSpeed = 2.0f * (m->intendedMag < maxTargetSpeed ? m->intendedMag : maxTargetSpeed);
+ 
+     if (m->quicksandDepth > 10.0f) {
+         targetSpeed *= 6.25 / m->quicksandDepth;
+@@ -450,13 +450,13 @@ void update_walking_speed(struct MarioState *m) {
+     if (m->forwardVel <= 0.0f) {
+         m->forwardVel += 1.1f;
+     } else if (m->forwardVel <= targetSpeed) {
+-        m->forwardVel += 1.1f - m->forwardVel / 43.0f;
++        m->forwardVel += 1.1f - m->forwardVel / 86.0f;
+     } else if (m->floor->normal.y >= 0.95f) {
+         m->forwardVel -= 1.0f;
+     }
+ 
+-    if (m->forwardVel > 48.0f) {
+-        m->forwardVel = 48.0f;
++    if (m->forwardVel > 64.0f) {
++        m->forwardVel = 64.0f;
+     }
+ 
+     m->faceAngle[1] =
