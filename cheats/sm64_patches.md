@@ -216,3 +216,34 @@ passes against `master`.
 - The cap music keeps playing for as long as the cap lasts.
 - Stacks with the two "lasts four times as long" patches, which then do
   nothing.
+
+## The 100-coin star appears at 50 coins
+
+**Source diff:** `cheats/patches/100-coin-star-at-50-coins.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:25:12
+
+**Mechanism:** `interact_coin()` in `src/game/interaction.c` spawns the 100-coin star
+when a coin takes the count from below 100 to 100 or more:
+
+```c
+&& m->numCoins - o->oDamageOrCoinValue < 100 && m->numCoins >= 100) {
+    bhv_spawn_star_no_level_exit(STAR_INDEX_100_COINS);
+```
+
+The patch changes both `100`s to `50`. Ported from the Zelda cheat
+"Guaranteed drops kick in five times sooner".
+
+**Evidence:** `COURSE_IS_MAIN_COURSE` still limits it to the 15 main courses. `git apply --check cheats/patches/100-coin-star-at-50-coins.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- Reaching 100 coins no longer spawns a second star.
+- The coin score saved with the star is whatever you have when you
+  touch it.
