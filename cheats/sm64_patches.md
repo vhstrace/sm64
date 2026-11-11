@@ -368,3 +368,33 @@ passes against `master`.
   also needs 120 stars. Use "The castle grounds cannon grate is always
   open", or fly up with the Wing Cap.
 - Talking to Yoshi gives 100 lives and the triple-jump flag as usual.
+
+## The castle grounds cannon grate is always open
+
+**Source diff:** `cheats/patches/cannon-grate-always-open.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:27:12
+
+**Mechanism:** `bhv_castle_cannon_grate_init()` in
+`src/game/behaviors/castle_cannon_grate.inc.c` removes the grate over the
+castle-grounds cannon once the file has 120 stars:
+
+```c
+if (save_file_get_total_star_count(...) >= 120) {
+    o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+```
+
+The patch changes `>= 120` to `>= 0`, so the grate is always removed.
+
+**Evidence:** This is the whole function. `git apply --check cheats/patches/cannon-grate-always-open.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- Combine with "Yoshi is on the castle roof without 120 stars" to meet
+  Yoshi early.
