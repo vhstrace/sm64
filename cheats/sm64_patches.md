@@ -108,3 +108,36 @@ passes against `master`.
 - Fall damage, lava, burning, drowning and falling out of the level
   still hurt or kill Mario.
 - Mario is still knocked back and still flashes after a hit.
+
+## The Wing Cap lasts four times as long
+
+**Source diff:** `cheats/patches/wing-cap-lasts-4x-longer.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:23:42
+
+**Mechanism:** `interact_cap()` in `src/game/interaction.c` sets the timer for a cap
+taken from a block:
+
+```c
+case MARIO_WING_CAP:
+    capTime = 1800;
+```
+
+The patch changes `1800` (60 seconds) to `7200` (4 minutes). Ported from
+the Zelda cheat "Bait lasts about three times as long".
+
+**Evidence:** `capTime` is a `u16`, so 7200 fits. The timer counts down in
+`update_and_return_cap_flags()` (`src/game/mario.c`). `git apply --check cheats/patches/wing-cap-lasts-4x-longer.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- The Wing Cap that Mario starts with in Tower of the Wing Cap is set
+  in `set_mario_initial_cap_powerup()` (`level_update.c`, 1200) and is
+  not changed.
+- Collecting a star that exits the course still ends the cap.

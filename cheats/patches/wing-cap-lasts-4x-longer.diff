@@ -1,0 +1,13 @@
+diff --git a/src/game/interaction.c b/src/game/interaction.c
+index ea6e455..57c5125 100644
+--- a/src/game/interaction.c
++++ b/src/game/interaction.c
+@@ -1604,7 +1604,7 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
+                 break;
+ 
+             case MARIO_WING_CAP:
+-                capTime = 1800;
++                capTime = 7200;
+                 capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP);
+                 break;
+         }
