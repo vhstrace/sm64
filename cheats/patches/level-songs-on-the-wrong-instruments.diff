@@ -1,0 +1,27 @@
+diff --git a/src/audio/load.c b/src/audio/load.c
+index aa0c71d..7f0b441 100644
+--- a/src/audio/load.c
++++ b/src/audio/load.c
+@@ -1039,6 +1039,22 @@ void audio_init() {
+     audio_dma_copy_immediate((uintptr_t) data, gSeqFileHeader, size);
+     alSeqFileNew(gSeqFileHeader, data);
+ 
++    // Cheat: rotate the song data of the 7 main level tracks. Each track
++    // number keeps its own instrument banks (gAlBankSets), so each level
++    // plays the next level's song on its own instruments.
++    // grass 03 <- water 05 <- snow 08 <- spooky 0A <- underground 0C
++    //   <- hot 06 <- slide 09 <- grass 03
++    {
++        ALSeqData first = gSeqFileHeader->seqArray[0x03];
++        gSeqFileHeader->seqArray[0x03] = gSeqFileHeader->seqArray[0x05];
++        gSeqFileHeader->seqArray[0x05] = gSeqFileHeader->seqArray[0x08];
++        gSeqFileHeader->seqArray[0x08] = gSeqFileHeader->seqArray[0x0A];
++        gSeqFileHeader->seqArray[0x0A] = gSeqFileHeader->seqArray[0x0C];
++        gSeqFileHeader->seqArray[0x0C] = gSeqFileHeader->seqArray[0x06];
++        gSeqFileHeader->seqArray[0x06] = gSeqFileHeader->seqArray[0x09];
++        gSeqFileHeader->seqArray[0x09] = first;
++    }
++
+     // Load header for CTL (instrument metadata)
+     gAlCtlHeader = (ALSeqFile *) buf;
+     data = gSoundDataADSR;

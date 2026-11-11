@@ -531,3 +531,66 @@ passes against `master`.
 - A stick that drifts past the dead zone keeps time running.
 - Demos on the title screen feed their own input to controller 1, so
   they run as usual.
+
+## Level songs play on the wrong instruments
+
+**Source diff:** `cheats/patches/level-songs-on-the-wrong-instruments.diff`
+**Changes:** the C change adds code to `audio_init()`, so code moves. No word list. `level-songs-on-the-wrong-instruments.bps` is 89,546 bytes.
+**Recorded:** 2026-11-11 05:46:33
+
+**Mechanism:** `audio_init()` in `src/audio/load.c` loads the music
+table, one entry (ROM offset and length) per track number:
+
+```c
+gSeqFileHeader = soundAlloc(&gAudioInitPool, size);
+audio_dma_copy_immediate((uintptr_t) data, gSeqFileHeader, size);
+alSeqFileNew(gSeqFileHeader, data);
+```
+
+A second table, `gAlBankSets`, picks the instrument banks for each track
+number (`get_missing_bank()` and `load_banks_immediate()` in
+`load.c`, and the bank-switch commands in `seqplayer.c`). The patch
+rotates the song entries of the 7 main level tracks right after
+`alSeqFileNew()`, and leaves `gAlBankSets` alone:
+
+| Track number (instruments) | Now plays the song of |
+|---|---|
+| 03 grass (bank 22) | 05 water |
+| 05 water (bank 13) | 08 snow |
+| 08 snow (bank 0B) | 0A spooky |
+| 0A spooky (banks 10, 21) | 0C underground |
+| 0C underground (bank 15) | 06 hot |
+| 06 hot (bank 0F) | 09 slide |
+| 09 slide (bank 0D) | 03 grass |
+
+So Bob-omb Battlefield plays the Jolly Roger Bay song on the grass
+instruments, and so on. The order follows the courses where each track
+is first heard (BoB, JRB, CCM, BBH, HMC, LLL, then the slide). The
+user asked for the wrong-instrument sound on purpose.
+
+**Evidence:** `sequence_dma_immediate()` and `sequence_dma_async()`
+(`load.c`) read only `gSeqFileHeader->seqArray[seqId]`, and the swap
+runs before any track loads, so every load sees the rotated table.
+Instrument numbers past the end of a bank are clamped
+(`get_instrument()`, `seqplayer.c`, US branch), and drum numbers too
+(`seqplayer.c` layer code), so a song can't read past a bank. Track
+numbers are from `include/seq_ids.h`; banks from `sound/sequences.json`.
+`git apply --check cheats/patches/level-songs-on-the-wrong-instruments.diff`
+passes against `master`. Built; the BPS applied to the original ROM
+matches the build.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Only the 7 level tracks change. The castle, title, menus, Bowser,
+  Koopa Road and event jingles play as before.
+- Some songs may be quiet or missing parts, where they ask for an
+  instrument number the other bank doesn't have (it plays the bank's last
+  instrument instead).
+- The spooky track's two banks: songs moved onto the other tracks can
+  switch banks with seq commands. A switch to a bank the track doesn't
+  have picks some other loaded bank or does nothing. Not checked by ear.
+- Each level keeps its own default volume (`sBackgroundMusicDefaultVolume`
+  in `external.c`), so some songs may be louder or quieter than normal.
