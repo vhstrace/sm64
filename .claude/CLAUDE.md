@@ -5,7 +5,7 @@ case in a cloud session. On the Mac, ignore it and follow `AGENTS.md`.
 
 Work on the `cheat-hunt` branch. Everything you make goes in `cheats/`:
 
-- `cheats/sm64_patches.md`: one entry per patch or GameShark code.
+- `cheats/sm64_hacks.md`: one entry per patch or GameShark code.
 - `cheats/patches/<slug>.diff`: the C source change for a patch.
 
 The Mac copies these back later. It builds the ROM, makes the BPS
@@ -37,7 +37,7 @@ files themselves are never committed.
    `<slug>` is a short kebab-case form of the title. Check with
    `git status` that no file outside `cheats/` is changed.
 3. Check that it still applies: `git apply --check cheats/patches/<slug>.diff`.
-4. Write the entry at the bottom of `cheats/sm64_patches.md`.
+4. Write the entry at the bottom of `cheats/sm64_hacks.md`.
 
 Each diff must stand alone: made against `master`, with no other patch
 applied. Don't change the Makefile, the linker script or `tools/`.

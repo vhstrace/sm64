@@ -1,6 +1,6 @@
 # Super Mario 64 (US) cheat to-do list
 
-Checked items have an entry in `sm64_patches.md`. Numbers match the
+Checked items have an entry in `sm64_hacks.md`. Numbers match the
 first proposal, which was based on the Zelda 1 Game Genie cheats.
 
 ## Proposed cheats
