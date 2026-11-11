@@ -258,6 +258,8 @@ passes against `master`.
 **Changes:** the C change moves code (data moves by 16 bytes), so no word list. `mario-runs-twice-as-fast.bps` is 145,071 bytes.
 **Recorded:** 2026-11-11 02:25:42
 
+Tags: `demo-ready` `play-start` `video-ready` `curated`
+
 **Mechanism:** `update_walking_speed()` in `src/game/mario_actions_moving.c` sets a
 target speed from the stick (at most 32), accelerates toward it with
 `1.1f - forwardVel / 43.0f` (which stops near 43), and caps the speed at
@@ -285,7 +287,7 @@ passes against `master`.
 
 **Caveats:**
 
-- Not tested.
+- Tested by the user in RetroArch (Mupen64Plus-Next) on 2026-11-10: works.
 - Long jumps still cap at 48 (`set_mario_action_airborne()`,
   `mario.c`), so a long jump from a full run is slower than the run.
 - Slow (`SURFACE_SLOW`) floors still have a lower target, now 48.
