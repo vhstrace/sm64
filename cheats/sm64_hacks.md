@@ -477,7 +477,7 @@ passes against `master`.
 ## Superhot mode: time moves only while the controller is active
 
 **Source diff:** `cheats/patches/superhot-mode.diff`
-**Changes:** not built yet
+**Changes:** the C change moves code, so no word list. `superhot-mode.bps` is 157,542 bytes.
 **Recorded:** 2026-11-11 02:43:53
 
 **Mechanism:** `play_mode_normal()` in `src/game/level_update.c` runs once
@@ -519,8 +519,6 @@ passes against `master`.
 **Caveats:**
 
 - Not tested.
-- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
-  builds the patch.
 - This patch adds code, so every function after `play_mode_normal()` in
   `level_update.c` moves. That is fine for a BPS, but it may not combine
   cleanly with other patches made as ROM bytes.
