@@ -1,0 +1,39 @@
+diff --git a/src/game/interaction.c b/src/game/interaction.c
+index ea6e455..185f161 100644
+--- a/src/game/interaction.c
++++ b/src/game/interaction.c
+@@ -1001,7 +1001,7 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
+     s16 numStars = save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
+ 
+     if (m->action == ACT_WALKING || m->action == ACT_DECELERATING) {
+-        if (numStars >= requiredNumStars) {
++        if (numStars >= 0) {
+             u32 actionArg = should_push_or_pull_door(m, o);
+             u32 enterDoorAction;
+             u32 doorSaveFileFlag;
+diff --git a/src/game/level_update.c b/src/game/level_update.c
+index a6186c3..2c494b8 100644
+--- a/src/game/level_update.c
++++ b/src/game/level_update.c
+@@ -532,7 +532,7 @@ void check_instant_warp(void) {
+     struct Surface *floor;
+ 
+     if (gCurrLevelNum == LEVEL_CASTLE
+-        && save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) >= 70) {
++        && save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) >= 0) {
+         return;
+     }
+ 
+diff --git a/src/game/sound_init.c b/src/game/sound_init.c
+index 1ef5331..d88f104 100644
+--- a/src/game/sound_init.c
++++ b/src/game/sound_init.c
+@@ -203,7 +203,7 @@ void play_infinite_stairs_music(void) {
+     u8 shouldPlay = FALSE;
+ 
+     /* Infinite stairs? */
+-    if (gCurrLevelNum == LEVEL_CASTLE && gCurrAreaIndex == 2 && gMarioState->numStars < 70) {
++    if (gCurrLevelNum == LEVEL_CASTLE && gCurrAreaIndex == 2 && gMarioState->numStars < 0) {
+         if (gMarioState->floor != NULL && gMarioState->floor->room == 6) {
+             if (gMarioState->pos[2] < 2540.0f) {
+                 shouldPlay = TRUE;

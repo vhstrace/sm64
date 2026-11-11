@@ -289,3 +289,49 @@ passes against `master`.
 - Slow (`SURFACE_SLOW`) floors still have a lower target, now 48.
 - At this speed Mario may run off ledges and into walls more easily.
   Wall collisions at speed 64 are not checked.
+
+## Star doors and the endless stairs need no stars
+
+**Source diff:** `cheats/patches/star-doors-need-no-stars.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:26:12
+
+**Mechanism:** `interact_door()` in `src/game/interaction.c` opens a star door only if
+the save file has enough stars:
+
+```c
+if (numStars >= requiredNumStars) {
+```
+
+The patch makes it `numStars >= 0`, which is always true.
+
+The endless stairs to Bowser in the Sky are not a door. `check_instant_warp()`
+in `src/game/level_update.c` skips the stairs' warp-back floor only with
+70 stars:
+
+```c
+if (gCurrLevelNum == LEVEL_CASTLE
+    && save_file_get_total_star_count(...) >= 70) {
+    return;
+```
+
+The patch makes it `>= 0`. `play_infinite_stairs_music()` in
+`src/game/sound_init.c` plays the stairs music while
+`gMarioState->numStars < 70`; the patch makes it `< 0` so the music stops
+too. Ported from the Zelda cheat "Level 9's entrance opens with no
+Triforce pieces".
+
+**Evidence:** The star-door behaviour files do not check stars themselves
+(`grep numStars src/game/behaviors/star_door.inc.c` finds nothing). `git apply --check cheats/patches/star-doors-need-no-stars.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- The key doors (basement and upstairs) still need the Bowser keys;
+  see `interact_warp_door()`.
+- The star-door dialog ("you need X stars") can no longer appear.
