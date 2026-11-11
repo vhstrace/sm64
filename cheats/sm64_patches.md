@@ -398,3 +398,36 @@ passes against `master`.
   builds the patch.
 - Combine with "Yoshi is on the castle roof without 120 stars" to meet
   Yoshi early.
+
+## MIPS appears with no stars
+
+**Source diff:** `cheats/patches/mips-appears-with-no-stars.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:27:42
+
+**Mechanism:** `bhv_mips_init()` in `src/game/behaviors/mips.inc.c` shows MIPS for his
+first star at 15 stars and his second at 50:
+
+```c
+if (save_file_get_total_star_count(...) >= 15
+    && !(starFlags & ...MIPS_STAR_1)) {
+...
+else if (save_file_get_total_star_count(...) >= 50
+         && !(starFlags & ...MIPS_STAR_2)) {
+```
+
+The patch changes both to `>= 0`. MIPS gives his first star, then his
+second, without any stars needed.
+
+**Evidence:** MIPS is still removed once both of his stars are collected. `git apply --check cheats/patches/mips-appears-with-no-stars.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- MIPS is in the castle basement, so you still need the first Bowser
+  key (or the basement door unlocked) to reach him.
