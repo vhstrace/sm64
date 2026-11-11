@@ -1,0 +1,19 @@
+diff --git a/src/game/interaction.c b/src/game/interaction.c
+index ea6e455..0bffd00 100644
+--- a/src/game/interaction.c
++++ b/src/game/interaction.c
+@@ -1594,12 +1594,12 @@ u32 interact_cap(struct MarioState *m, UNUSED u32 interactType, struct Object *o
+ 
+         switch (capFlag) {
+             case MARIO_VANISH_CAP:
+-                capTime = 600;
++                capTime = 2400;
+                 capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_POWERUP);
+                 break;
+ 
+             case MARIO_METAL_CAP:
+-                capTime = 600;
++                capTime = 2400;
+                 capMusic = SEQUENCE_ARGS(4, SEQ_EVENT_METAL_CAP);
+                 break;
+ 

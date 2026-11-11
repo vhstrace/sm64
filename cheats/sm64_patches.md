@@ -141,3 +141,37 @@ passes against `master`.
   in `set_mario_initial_cap_powerup()` (`level_update.c`, 1200) and is
   not changed.
 - Collecting a star that exits the course still ends the cap.
+
+## The Metal and Vanish Caps last four times as long
+
+**Source diff:** `cheats/patches/metal-and-vanish-caps-last-4x-longer.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:24:12
+
+**Mechanism:** `interact_cap()` in `src/game/interaction.c` sets the timer for both caps
+to 600 frames (20 seconds):
+
+```c
+case MARIO_VANISH_CAP:
+    capTime = 600;
+...
+case MARIO_METAL_CAP:
+    capTime = 600;
+```
+
+The patch changes both to `2400` (80 seconds).
+
+**Evidence:** Exactly two `capTime = 600;` lines in `interaction.c`, both in
+`interact_cap()`. `git apply --check cheats/patches/metal-and-vanish-caps-last-4x-longer.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- The caps Mario starts with in the Cavern of the Metal Cap and the
+  Vanish Cap level (`set_mario_initial_cap_powerup()`, `level_update.c`)
+  are not changed.
