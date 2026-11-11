@@ -255,7 +255,7 @@ passes against `master`.
 ## Mario runs twice as fast
 
 **Source diff:** `cheats/patches/mario-runs-twice-as-fast.diff`
-**Changes:** not built yet
+**Changes:** the C change moves code (data moves by 16 bytes), so no word list. `mario-runs-twice-as-fast.bps` is 145,071 bytes.
 **Recorded:** 2026-11-11 02:25:42
 
 **Mechanism:** `update_walking_speed()` in `src/game/mario_actions_moving.c` sets a
@@ -286,8 +286,6 @@ passes against `master`.
 **Caveats:**
 
 - Not tested.
-- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
-  builds the patch.
 - Long jumps still cap at 48 (`set_mario_action_airborne()`,
   `mario.c`), so a long jump from a full run is slower than the run.
 - Slow (`SURFACE_SLOW`) floors still have a lower target, now 48.
