@@ -110,7 +110,7 @@ references.
   value editor `try_modify_debug_controls()`
 - [ ] Turn on the D-pad object spawner: call
   `try_do_mario_debug_object_spawn()`
-- [ ] Show the enemy info page: call `debug_enemy_unknown()`
+- [ ] Find out what `debug_enemy_unknown()` does (no callers), then call it
 
 ### Mario actions
 
