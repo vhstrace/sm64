@@ -1,8 +1,9 @@
 # Super Mario 64 (US) patches and GameShark codes
 
-Made in cloud sessions on the `cheat-hunt` branch. See `.claude/CLAUDE.md`
-for the rules. Each patch's C change is in `patches/<slug>.diff`. The Mac
-builds them into BPS patches. Newest entry last.
+Made on the Mac and in cloud sessions. The main copy is the gist; a copy
+is in `cheats/sm64_hacks.md` on the `cheat-hunt` branch of `vhstrace/sm64`,
+with each patch's C change in `cheats/patches/<slug>.diff`. The Mac builds
+them into BPS patches. Newest entry last.
 
 ## Start a new game with 99 lives
 
