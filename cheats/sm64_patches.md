@@ -335,3 +335,36 @@ passes against `master`.
 - The key doors (basement and upstairs) still need the Bowser keys;
   see `interact_warp_door()`.
 - The star-door dialog ("you need X stars") can no longer appear.
+
+## Yoshi is on the castle roof without 120 stars
+
+**Source diff:** `cheats/patches/yoshi-on-the-roof-without-120-stars.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:26:42
+
+**Mechanism:** `bhv_yoshi_init()` in `src/game/behaviors/yoshi.inc.c` removes Yoshi
+unless the file has 120 stars:
+
+```c
+if (save_file_get_total_star_count(...) < 120
+    || sYoshiDead == TRUE) {
+    o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+```
+
+The patch changes `< 120` to `< 0`, which is never true.
+
+**Evidence:** `sYoshiDead` still removes him after you have talked to him once in a
+session. `git apply --check cheats/patches/yoshi-on-the-roof-without-120-stars.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- The roof is normally reached by the cannon behind the grate, which
+  also needs 120 stars. Use "The castle grounds cannon grate is always
+  open", or fly up with the Wing Cap.
+- Talking to Yoshi gives 100 lives and the triple-jump flag as usual.
