@@ -175,3 +175,44 @@ passes against `master`.
 - The caps Mario starts with in the Cavern of the Metal Cap and the
   Vanish Cap level (`set_mario_initial_cap_powerup()`, `level_update.c`)
   are not changed.
+
+## Caps never run out
+
+**Source diff:** `cheats/patches/caps-never-run-out.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-11 02:24:42
+
+**Mechanism:** `update_and_return_cap_flags()` in `src/game/mario.c` counts the cap
+timer down every frame unless Mario is reading or in a cannon:
+
+```c
+if ((m->capTimer <= 60)
+    || ((action != ACT_READING_AUTOMATIC_DIALOG) && (action != ACT_READING_NPC_DIALOG)
+        && (action != ACT_READING_SIGN) && (action != ACT_IN_CANNON))) {
+    m->capTimer -= 1;
+}
+```
+
+The patch changes `||` to `&&`. Now the timer only counts down once it is
+at 60 or less. A normal cap timer starts at 600 or more, so it never
+counts down.
+
+**Evidence:** Places that still end a cap, because they set the timer to 60 or less:
+collecting a star that exits the course (`interact_star_or_key()`,
+`capTimer = 1`) and the ending cutscene (`mario_actions_cutscene.c`,
+`capTimer = 60`). `init_mario()` sets `capTimer = 0` on every level or
+area load. `git apply --check cheats/patches/caps-never-run-out.diff`
+passes against `master`.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built. The Mac fills in **Changes:** (the ROM bytes) after it
+  builds the patch.
+- The cap lasts until you collect a star that exits the course, die,
+  or leave the level.
+- The cap music keeps playing for as long as the cap lasts.
+- Stacks with the two "lasts four times as long" patches, which then do
+  nothing.

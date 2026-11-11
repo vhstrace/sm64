@@ -1,0 +1,13 @@
+diff --git a/src/game/mario.c b/src/game/mario.c
+index 32c63c9..901c9ef 100644
+--- a/src/game/mario.c
++++ b/src/game/mario.c
+@@ -1572,7 +1572,7 @@ u32 update_and_return_cap_flags(struct MarioState *m) {
+         action = m->action;
+ 
+         if ((m->capTimer <= 60)
+-            || ((action != ACT_READING_AUTOMATIC_DIALOG) && (action != ACT_READING_NPC_DIALOG)
++            && ((action != ACT_READING_AUTOMATIC_DIALOG) && (action != ACT_READING_NPC_DIALOG)
+                 && (action != ACT_READING_SIGN) && (action != ACT_IN_CANNON))) {
+             m->capTimer -= 1;
+         }
