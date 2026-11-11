@@ -8,9 +8,10 @@ Work on the `cheat-hunt` branch. Everything you make goes in `cheats/`:
 - `cheats/sm64_hacks.md`: one entry per patch or GameShark code.
 - `cheats/patches/<slug>.diff`: the C source change for a patch.
 
-The Mac copies these back later. It builds the ROM, makes the BPS
-patches and syncs Batocera and MinUI. None of that is possible here, so
-don't try it, and don't write to `~/Downloads`.
+The Mac copies new entries into the main notes file (a gist) and copies
+it back here, so `cheats/sm64_hacks.md` may change under you: pull
+before editing. The Mac builds BPS patches when the user asks. None of
+that is possible here, so don't try it, and don't write to `~/Downloads`.
 
 ## What you can't do here
 
