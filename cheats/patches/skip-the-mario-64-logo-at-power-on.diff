@@ -1,0 +1,12 @@
+diff --git a/levels/entry.c b/levels/entry.c
+index 17c773e..4349178 100644
+--- a/levels/entry.c
++++ b/levels/entry.c
+@@ -12,6 +12,6 @@ const LevelScript level_script_entry[] = {
+     SLEEP(/*frames*/ 2),
+     BLACKOUT(/*active*/ FALSE),
+     SET_REG(/*value*/ 0),
+-    EXECUTE(/*seg*/ 0x14, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ level_intro_splash_screen),
++    EXECUTE(/*seg*/ 0x14, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ level_intro_mario_head_regular),
+     JUMP(/*target*/ level_script_entry),
+ };

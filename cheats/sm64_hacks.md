@@ -594,3 +594,47 @@ matches the build.
   have picks some other loaded bank or does nothing. Not checked by ear.
 - Each level keeps its own default volume (`sBackgroundMusicDefaultVolume`
   in `external.c`), so some songs may be louder or quieter than normal.
+
+## Skip the Super Mario 64 logo at power on
+
+**Source diff:** `cheats/patches/skip-the-mario-64-logo-at-power-on.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-14 23:50:45
+
+**Mechanism:** SM64 has no N64 logo screen. Its first screen is the
+zooming "SUPER MARIO 64" logo, where Mario says "It's-a me, Mario!".
+At power on, `level_script_entry` (`levels/entry.c`) runs:
+
+```c
+EXECUTE(/*seg*/ 0x14, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ level_intro_splash_screen),
+```
+
+`level_intro_splash_screen` (`levels/intro/script.c`) shows the logo
+for 75 frames, fades to black for 16, and then does
+`EXIT_AND_EXECUTE(... level_intro_mario_head_regular)`. The patch
+makes the entry script run `level_intro_mario_head_regular` at once, so
+the game starts on the Mario head title screen.
+
+**Evidence:** Both scripts are in the same intro segment (`0x14`),
+and `level_intro_mario_head_regular` is declared in
+`levels/intro/header.h`, which `entry.c` already includes. The head
+script does its own `INIT_LEVEL`, Goddard load and `BLACKOUT`, so it
+needs nothing from the logo script. The logo's only other work is
+`intro_play_its_a_me_mario()` (`src/menu/title_screen.c`), which plays
+the voice and calls `set_background_music(0, SEQ_SOUND_PLAYER, 0)`.
+The sound effect player is started at boot in `src/game/game_init.c`
+(`play_music(SEQ_PLAYER_SFX, SEQUENCE_ARGS(0, SEQ_SOUND_PLAYER), 0)`),
+so sound effects still work. `git apply --check` passes.
+
+**Revisions:** US (rev 0) only. Others not checked.
+
+**Caveats:**
+
+- Not tested.
+- Not built.
+- Only power on (and reset) is changed. The other way to the logo,
+  `script_L1` in `levels/scripts.c` (after the ending and some
+  returns to the title), still shows it.
+- "It's-a me, Mario!" is not heard at power on.
+- The title screen comes about 1.5 seconds sooner (75 + 16 frames at
+  60 per second, plus loading).
