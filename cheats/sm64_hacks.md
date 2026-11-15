@@ -636,5 +636,5 @@ so sound effects still work. `git apply --check` passes.
   `script_L1` in `levels/scripts.c` (after the ending and some
   returns to the title), still shows it.
 - "It's-a me, Mario!" is not heard at power on.
-- The title screen comes about 1.5 seconds sooner (75 + 16 frames at
-  60 per second, plus loading).
+- The title screen comes about 3 seconds sooner (75 + 16 frames at
+  30 per second, plus loading).
