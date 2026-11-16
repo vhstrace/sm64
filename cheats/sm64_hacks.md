@@ -595,50 +595,66 @@ matches the build.
 - Each level keeps its own default volume (`sBackgroundMusicDefaultVolume`
   in `external.c`), so some songs may be louder or quieter than normal.
 
-## Skip the Super Mario 64 logo at power on
+## Skip the Super Mario 64 logo and the Mario head at power on
 
-**Source diff:** `cheats/patches/skip-the-mario-64-logo-at-power-on.diff`
-**Changes:** `ROM 0x00108A2C: 14000000 → 14000078` (the `EXECUTE`
-entry offset in `level_script_entry`), plus the CRC
-**Recorded:** 2026-11-14 23:50:45
+**Source diff:** `cheats/patches/skip-the-logo-and-mario-head-at-power-on.diff`
+**Changes:** not built yet
+**Recorded:** 2026-11-15 18:18:46
 
-Tags: `utility`
+**Mechanism:** This replaces "Skip the Super Mario 64 logo at power
+on", which started the game on the Mario head screen. This one skips
+both the zooming "SUPER MARIO 64" logo and the Mario head screen, so the
+game starts on the file select screen.
 
-**Mechanism:** SM64 has no N64 logo screen. Its first screen is the
-zooming "SUPER MARIO 64" logo, where Mario says "It's-a me, Mario!".
 At power on, `level_script_entry` (`levels/entry.c`) runs:
 
 ```c
 EXECUTE(/*seg*/ 0x14, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ level_intro_splash_screen),
 ```
 
-`level_intro_splash_screen` (`levels/intro/script.c`) shows the logo
-for 75 frames, fades to black for 16, and then does
-`EXIT_AND_EXECUTE(... level_intro_mario_head_regular)`. The patch
-makes the entry script run `level_intro_mario_head_regular` at once, so
-the game starts on the Mario head title screen.
+`level_intro_splash_screen` (`levels/intro/script.c`) shows the logo,
+then runs `level_intro_mario_head_regular`. When Start is pressed there,
+`intro_regular()` (`src/menu/title_screen.c`) returns 100, and the head
+script jumps to `script_intro_L1`, which runs
+`EXIT_AND_EXECUTE(/*seg*/ 0x14, _menuSegmentRomStart, _menuSegmentRomEnd, level_main_menu_entry_1)`,
+the file select. The patch makes the entry script run that file select
+script at once:
 
-**Evidence:** Both scripts are in the same intro segment (`0x14`),
-and `level_intro_mario_head_regular` is declared in
-`levels/intro/header.h`, which `entry.c` already includes. The head
-script does its own `INIT_LEVEL`, Goddard load and `BLACKOUT`, so it
-needs nothing from the logo script. The logo's only other work is
-`intro_play_its_a_me_mario()` (`src/menu/title_screen.c`), which plays
-the voice and calls `set_background_music(0, SEQ_SOUND_PLAYER, 0)`.
-The sound effect player is started at boot in `src/game/game_init.c`
-(`play_music(SEQ_PLAYER_SFX, SEQUENCE_ARGS(0, SEQ_SOUND_PLAYER), 0)`),
-so sound effects still work. `git apply --check` passes.
+```c
+EXECUTE(/*seg*/ 0x14, /*script*/ _menuSegmentRomStart, /*scriptEnd*/ _menuSegmentRomEnd, /*entry*/ level_main_menu_entry_1),
+```
+
+and adds `#include "levels/menu/header.h"` to `entry.c` for
+`level_main_menu_entry_1`.
+
+**Evidence:** `level_main_menu_entry_1` (`levels/menu/script.c`) does its
+own `INIT_LEVEL`, Goddard load, `LOAD_MIO0` of the menu segment 7 and
+behavior load, and starts `SEQ_MENU_FILE_SELECT` itself, so it needs
+nothing from the logo or head scripts. It sets the save file number from
+its own `CALL_LOOP` result, so the `SET_REG(16)` that `script_intro_L1`
+does before it is not needed (the entry script's `SET_REG(0)` is left
+as is). Save files and the sound mode are loaded at boot in
+`src/game/game_init.c` (`save_file_load_all()`,
+`set_sound_mode(save_file_get_sound_mode())`), before any level script.
+Both the intro and the menu scripts load at segment `0x14`, and the map
+has `level_main_menu_entry_1` at `0x14000000` and `_menuSegmentRomStart`
+at ROM `0x2A6120`. `git apply --check` passes against `master`.
 
 **Revisions:** US (rev 0) only. Others not checked.
 
 **Caveats:**
 
-- Tested by the user in RetroArch: works.
-- It is one of the base cheats (2026-11-15), so every test build and
-  combined patch has it.
-- Only power on (and reset) is changed. The other way to the logo,
-  `script_L1` in `levels/scripts.c` (after the ending and some
-  returns to the title), still shows it.
-- "It's-a me, Mario!" is not heard at power on.
-- The title screen comes about 3 seconds sooner (75 + 16 frames at
-  30 per second, plus loading).
+- Not tested.
+- Not built. The C change is in `entry.c` only, so no code moves; the
+  `EXECUTE` command's ROM start, ROM end and entry words change.
+- Only power on (and reset) is changed. "Save and quit", game over and
+  the ending still go to the Mario head screen or the logo
+  (`goto_mario_head_regular`, `goto_mario_head_dizzy` and `script_L1` in
+  `levels/scripts.c`).
+- "It's-a me, Mario!" and the head screen's "Hello!" are not heard at
+  power on.
+- The debug level select (Start on the head screen with
+  `gDebugLevelSelect` set) can't be reached at power on.
+- It replaces the base cheat `skip-the-mario-64-logo-at-power-on`
+  (2026-11-15), so every test build and combined patch now starts on
+  the file select.
