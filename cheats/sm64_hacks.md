@@ -602,6 +602,8 @@ matches the build.
 entry offset in `level_script_entry`), plus the CRC
 **Recorded:** 2026-11-14 23:50:45
 
+Tags: `utility`
+
 **Mechanism:** SM64 has no N64 logo screen. Its first screen is the
 zooming "SUPER MARIO 64" logo, where Mario says "It's-a me, Mario!".
 At power on, `level_script_entry` (`levels/entry.c`) runs:
@@ -631,7 +633,9 @@ so sound effects still work. `git apply --check` passes.
 
 **Caveats:**
 
-- Not tested.
+- Tested by the user in RetroArch: works.
+- It is one of the base cheats (2026-11-15), so every test build and
+  combined patch has it.
 - Only power on (and reset) is changed. The other way to the logo,
   `script_L1` in `levels/scripts.c` (after the ending and some
   returns to the title), still shows it.
