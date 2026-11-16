@@ -603,6 +603,8 @@ matches the build.
 `0x14000000` is the same for both scripts). Built 2026-11-15.
 **Recorded:** 2026-11-15 18:18:46
 
+Tags: `utility`
+
 **Mechanism:** This replaces "Skip the Super Mario 64 logo at power
 on", which started the game on the Mario head screen. This one skips
 both the zooming "SUPER MARIO 64" logo and the Mario head screen, so the
@@ -646,7 +648,7 @@ at ROM `0x2A6120`. `git apply --check` passes against `master`.
 
 **Caveats:**
 
-- Not tested.
+- Tested by the user in RetroArch: works.
 - No code moves. Only the `EXECUTE` command's ROM start and end words
   change.
 - Only power on (and reset) is changed. "Save and quit", game over and
