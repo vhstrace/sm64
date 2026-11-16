@@ -598,7 +598,9 @@ matches the build.
 ## Skip the Super Mario 64 logo and the Mario head at power on
 
 **Source diff:** `cheats/patches/skip-the-logo-and-mario-head-at-power-on.diff`
-**Changes:** not built yet
+**Changes:** `ROM 0x00108A24: 00269EA0 → 002A6120` + `ROM 0x00108A28: 0026A3A0 → 002A65B0`
+(the `EXECUTE` ROM start and end in `level_script_entry`; the entry word
+`0x14000000` is the same for both scripts). Built 2026-11-15.
 **Recorded:** 2026-11-15 18:18:46
 
 **Mechanism:** This replaces "Skip the Super Mario 64 logo at power
@@ -645,8 +647,8 @@ at ROM `0x2A6120`. `git apply --check` passes against `master`.
 **Caveats:**
 
 - Not tested.
-- Not built. The C change is in `entry.c` only, so no code moves; the
-  `EXECUTE` command's ROM start, ROM end and entry words change.
+- No code moves. Only the `EXECUTE` command's ROM start and end words
+  change.
 - Only power on (and reset) is changed. "Save and quit", game over and
   the ending still go to the Mario head screen or the logo
   (`goto_mario_head_regular`, `goto_mario_head_dizzy` and `script_L1` in
