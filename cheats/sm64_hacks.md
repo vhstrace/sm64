@@ -598,7 +598,8 @@ matches the build.
 ## Skip the Super Mario 64 logo at power on
 
 **Source diff:** `cheats/patches/skip-the-mario-64-logo-at-power-on.diff`
-**Changes:** not built yet
+**Changes:** `ROM 0x00108A2C: 14000000 → 14000078` (the `EXECUTE`
+entry offset in `level_script_entry`), plus the CRC
 **Recorded:** 2026-11-14 23:50:45
 
 **Mechanism:** SM64 has no N64 logo screen. Its first screen is the
@@ -631,7 +632,6 @@ so sound effects still work. `git apply --check` passes.
 **Caveats:**
 
 - Not tested.
-- Not built.
 - Only power on (and reset) is changed. The other way to the logo,
   `script_L1` in `levels/scripts.c` (after the ending and some
   returns to the title), still shows it.
